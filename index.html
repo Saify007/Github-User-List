@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Users Page</title>
+  </head>
+
+  <body>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fugaz+One&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,600;1,600&family=Russo+One&display=swap");
+
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100vh;
+        height: 100vh;
+        display: absuolte;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background-image: linear-gradient(
+          to right top,
+          #051937,
+          #004d7a,
+          #008793,
+          #00bf72,
+          #a8eb12
+        );
+      }
+
+      .glow-on-hover {
+        width: 220px;
+        height: 50px;
+        border: none;
+        outline: none;
+        color: #fff;
+        background: #111;
+        cursor: pointer;
+        position: relative;
+        z-index: 0;
+        border-radius: 10px;
+        font-size: 22px;
+      }
+
+      .glow-on-hover:before {
+        content: "";
+        background: linear-gradient(
+          45deg,
+          #ff0000,
+          #ff7300,
+          #fffb00,
+          #48ff00,
+          #00ffd5,
+          #002bff,
+          #7a00ff,
+          #ff00c8,
+          #ff0000
+        );
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        background-size: 400%;
+        z-index: -1;
+        filter: blur(5px);
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        animation: glowing 20s linear infinite;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        border-radius: 10px;
+      }
+
+      .glow-on-hover:active {
+        background: transparent;
+      }
+
+      .glow-on-hover:active:after {
+        background: transparent;
+      }
+
+      .glow-on-hover:hover:before {
+        opacity: 1;
+      }
+
+      .glow-on-hover:after {
+        z-index: -1;
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        left: 0;
+        top: 0;
+        border-radius: 10px;
+      }
+
+      @keyframes glowing {
+        0% {
+          background-position: 0 0;
+        }
+        50% {
+          background-position: 400% 0;
+        }
+        100% {
+          background-position: 0 0;
+        }
+      }
+
+      .info {
+        display: flex;
+        flex-direction: row;
+        box-shadow: 10px 10px 5px grey;
+        width: 750px;
+        border: 15px rgb(245, 244, 244);
+        padding: 30px;
+        margin: 15px;
+        font-size: 72px;
+        background: -webkit-linear-gradient(#eee, #333);
+        font-family: "Fugaz One", cursive;
+        color: #00ffd5;
+      }
+
+      .box {
+        margin-left: 55%;
+        box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        background-image: linear-gradient(135deg, white, lightgreen, darkblue);
+        backdrop-filter: blur(2px);
+        width: 750px;
+        border: 15px rgb(245, 244, 244);
+        padding: 30px;
+        margin: 15px;
+        font-family: "Russo One";
+      }
+
+      .img {
+        float: left;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+          0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-right: 55px;
+      }
+
+      .box::after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+    </style>
+
+    <button class="glow-on-hover" id="fetch" type="button">
+      Load GitHub Users
+    </button>
+
+    <section id="info"></section>
+
+    <script>
+      document.getElementById("fetch").addEventListener("click", loadm);
+
+      function loadm() {
+        var req = new XMLHttpRequest();
+        req.open("GET", "https://api.github.com/users");
+
+        req.onload = function () {
+          if (req.status == 200) {
+            var people = JSON.parse(req.responseText);
+            var optput = " ";
+
+            for (var i in people) {
+              optput +=
+                '<div class="box">' +
+                '<img class="img" src="' +
+                people[i].avatar_url +
+                ' "width="185" height="185">' +
+                "<ul>" +
+                "<li>ID: " +
+                people[i].id +
+                "</li>" +
+                "<li>Login: " +
+                people[i].login +
+                "</li>" +
+                "<li>Type: " +
+                people[i].type +
+                "</li>" +
+                "<li>Followers-url: " +
+                people[i].followers_url +
+                "</li>" +
+                "<li>Gits-url: " +
+                people[i].gists_url +
+                "</li>" +
+                "<li>Repos:" +
+                people[i].repos_url +
+                "</li>" +
+                "</ul>" +
+                "</div>";
+
+              document.getElementById("info").innerHTML = optput;
+            }
+          }
+        };
+        req.send();
+      }
+    </script>
+  </body>
+</html>
